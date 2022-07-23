@@ -4,20 +4,77 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<ContactModel> arrContact = new ArrayList<>();
+    RecyclerView recyclerView;
+    RecyclerContactAdapter adapter;
+    FloatingActionButton btnAddContact;
+    Button addBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+
+        recyclerView = findViewById(R.id.recyclerView);
+        btnAddContact = findViewById(R.id.flotingActionButton);
+
+
+
+        btnAddContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.add_update_layout);
+
+                EditText editName = dialog.findViewById(R.id.nameFiled);
+                EditText editNumber = dialog.findViewById(R.id.numberFiled);
+                Button addButton = dialog.findViewById(R.id.addBtn);
+
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String name = "", number = "";
+                        if(!editName.getText().toString().equals("")){
+                            name = editName.getText().toString();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Please Enter Contact Name", Toast.LENGTH_SHORT).show();
+                        }
+                        if(!editNumber.getText().toString().equals("")){
+                            number = editNumber.getText().toString();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Please Enter Contact Number", Toast.LENGTH_SHORT).show();
+                        }
+
+                        arrContact.add(new ContactModel(name, number));
+
+                        adapter.notifyItemInserted(arrContact.size()-1);
+
+                        recyclerView.scrollToPosition(arrContact.size()-1);
+                        dialog.dismiss();
+
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //calling constractor
@@ -45,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         arrContact.add(new ContactModel(R.drawable.a, "Md Razon Biswas","01890441194"));
         arrContact.add(new ContactModel(R.drawable.avatar, "Md Tanvir Rahman","01590567796"));
 
-        RecyclerContactAdapter adapter = new RecyclerContactAdapter(this, arrContact);
+        adapter = new RecyclerContactAdapter(this, arrContact);
         recyclerView.setAdapter(adapter);
 
 
