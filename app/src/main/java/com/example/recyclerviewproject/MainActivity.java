@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Please Enter Contact Number", Toast.LENGTH_SHORT).show();
                         }
 
-                        arrContact.add(new ContactModel(name, number));
+                        arrContact.add(new ContactModel(R.drawable.avatar,name, number));
 
                         adapter.notifyItemInserted(arrContact.size()-1);
 

@@ -1,7 +1,9 @@
 package com.example.recyclerviewproject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +86,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                         }else{
                             Toast.makeText(context, "Please Enter Contact Number", Toast.LENGTH_SHORT).show();
                         }
-                        arrContact.set(position, new ContactModel(name, number));
+                        arrContact.set(position, new ContactModel(arrContact.get(position).img, name, number));
                         notifyItemChanged(position);
                         dialog.dismiss();
                     }
@@ -92,6 +94,35 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
                 dialog.show();
             }
         });
+
+        //delete operation
+        holder.contactRow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                        .setTitle("Delete Contact")
+                        .setMessage("Are You Sure!!")
+                        .setIcon(R.drawable.ic_baseline_delete_forever_24)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                arrContact.remove(position);
+                                notifyItemRemoved(position);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+                builder.show();
+
+                return true;
+            }
+        });
+
 
     }
 
